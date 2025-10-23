@@ -100,9 +100,9 @@ jobs:
             apt-mirrors:
               mc-rtc:
                 cloudsmith: mc-rtc/${{ matrix.mc-rtc-version }}
-            apt: libmc-rtc-dev mc-rtc-utils doxygen graphviz
+            apt: libmc-rtc-dev doxygen graphviz
           ros: |
-            apt: ros-base eigen-conversions
+            apt: ros-base
 
       - name: Install standalone dependencies
         if: matrix.catkin-build == 'standalone'
