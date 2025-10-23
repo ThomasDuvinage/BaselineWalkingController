@@ -119,15 +119,16 @@ jobs:
         with:
           compiler: ${{ matrix.compiler }}
           build-type: ${{ matrix.build-type }}
-          ros: |
-            apt: sbpl
           github: |
+            - path: sbpl/sbpl
+              ref: master
+              options: -DCMAKE_POLICY_VERSION_MINIMUM=3.5
             - path: isri-aist/BaselineFootstepPlanner
               ref: master
 
       - name: Checkout repository code for standalone build
         if: matrix.catkin-build == 'standalone'
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           submodules: recursive
 
