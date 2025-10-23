@@ -102,7 +102,7 @@ jobs:
                 cloudsmith: mc-rtc/${{ matrix.mc-rtc-version }}
             apt: libmc-rtc-dev doxygen graphviz python3-eigen
           ros: |
-            apt: ros-base mc-rtc-plugin
+            apt: ros-base mc-rtc-plugin mc-state-observation
 
       - name: Install standalone dependencies
         if: matrix.catkin-build == 'standalone'
