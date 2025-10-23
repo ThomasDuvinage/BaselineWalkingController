@@ -102,7 +102,7 @@ jobs:
                 cloudsmith: mc-rtc/${{ matrix.mc-rtc-version }}
             apt: libmc-rtc-dev mc-rtc-utils doxygen graphviz
           ros: |
-            apt: ros-base mc-rtc-plugin eigen-conversions
+            apt: ros-base eigen-conversions
 
       - name: Install standalone dependencies
         if: matrix.catkin-build == 'standalone'
