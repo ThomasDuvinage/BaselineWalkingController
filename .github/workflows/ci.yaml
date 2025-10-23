@@ -100,7 +100,7 @@ jobs:
             apt-mirrors:
               mc-rtc:
                 cloudsmith: mc-rtc/${{ matrix.mc-rtc-version }}
-            apt: libmc-rtc-dev doxygen graphviz
+            apt: libmc-rtc-dev doxygen graphviz python3-eigen
           ros: |
             apt: ros-base mc-rtc-plugin
 
