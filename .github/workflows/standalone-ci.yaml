@@ -1,4 +1,4 @@
-name: Colcon-CI of BaselineWalkingController
+name: Standalone-CI of BaselineWalkingController
 
 on:
   push:
@@ -139,6 +139,7 @@ jobs:
           compiler: ${{ matrix.compiler }}
           build-type: ${{ matrix.build-type }}
 
+      # FIXME: To be retored
       # - name: Run simulation
       #   if: env.RUN_SIMULATION_STEPS == 'true'
       #   # https://github.com/jrl-umi3218/lipm_walking_controller/blob/b564d655388ae6a6725c504e5c74a62192e58c7c/.github/workflows/build.yml#L64-L92
@@ -204,30 +205,30 @@ jobs:
       #     mv `readlink -f /tmp/mc-control-BaselineWalkingController-latest.bin` /tmp/${LOG_FILENAME}.bin
       #     tar czf /tmp/results/${LOG_FILENAME}.tar.gz -C /tmp ${LOG_FILENAME}.bin
 
-      - name: Upload simulation data
-        if: env.RUN_SIMULATION_STEPS == 'true'
-        uses: actions/upload-artifact@v4
-        with:
-          name: BWC-ci-results-${{ env.RESULTS_POSTFIX }}
-          path: /tmp/results
+      # - name: Upload simulation data
+      #   if: env.RUN_SIMULATION_STEPS == 'true'
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: BWC-ci-results-${{ env.RESULTS_POSTFIX }}
+      #     path: /tmp/results
 
-      - name: Check simulation results
-        if: env.RUN_SIMULATION_STEPS == 'true'
-        run: |
-          set -e
-          set -x
-          if [ "${{ matrix.motion-type }}" == "WalkingOnPlane" ]; then
-            EXPECTED_BASE_POS="1.34 -0.41 0.8"
-          elif [ "${{ matrix.motion-type }}" == "WalkingOnStairs" ]; then
-            EXPECTED_BASE_POS="1.75 0.0 1.68"
-          elif [ "${{ matrix.motion-type }}" == "WalkingOnPlaneWaypoint" ]; then
-            EXPECTED_BASE_POS="0.82 0.57 0.8"
-          elif [ "${{ matrix.motion-type }}" == "WalkingOnPlaneVel" ]; then
-            EXPECTED_BASE_POS="0.74 -0.53 0.8"
-          elif [ "${{ matrix.motion-type }}" == "WalkingOnPlaneRos" ]; then
-            EXPECTED_BASE_POS="1.03 0.68 0.8"
-          else # if [ "${{ matrix.motion-type }}" == "WalkingWithFootstepPlanner" ]; then
-            EXPECTED_BASE_POS="2.5 -0.25 0.8"
-          fi
-          LOG_FILENAME=BWC-log-${RESULTS_POSTFIX}
-          python3 ${{ env.CI_DIR }}/scripts/checkSimulationResults.py /tmp/${LOG_FILENAME}.bin --expected-base-pos ${EXPECTED_BASE_POS}
+      # - name: Check simulation results
+      #   if: env.RUN_SIMULATION_STEPS == 'true'
+      #   run: |
+      #     set -e
+      #     set -x
+      #     if [ "${{ matrix.motion-type }}" == "WalkingOnPlane" ]; then
+      #       EXPECTED_BASE_POS="1.34 -0.41 0.8"
+      #     elif [ "${{ matrix.motion-type }}" == "WalkingOnStairs" ]; then
+      #       EXPECTED_BASE_POS="1.75 0.0 1.68"
+      #     elif [ "${{ matrix.motion-type }}" == "WalkingOnPlaneWaypoint" ]; then
+      #       EXPECTED_BASE_POS="0.82 0.57 0.8"
+      #     elif [ "${{ matrix.motion-type }}" == "WalkingOnPlaneVel" ]; then
+      #       EXPECTED_BASE_POS="0.74 -0.53 0.8"
+      #     elif [ "${{ matrix.motion-type }}" == "WalkingOnPlaneRos" ]; then
+      #       EXPECTED_BASE_POS="1.03 0.68 0.8"
+      #     else # if [ "${{ matrix.motion-type }}" == "WalkingWithFootstepPlanner" ]; then
+      #       EXPECTED_BASE_POS="2.5 -0.25 0.8"
+      #     fi
+      #     LOG_FILENAME=BWC-log-${RESULTS_POSTFIX}
+      #     python3 ${{ env.CI_DIR }}/scripts/checkSimulationResults.py /tmp/${LOG_FILENAME}.bin --expected-base-pos ${EXPECTED_BASE_POS}
