@@ -180,15 +180,15 @@ jobs:
             apt-mirrors:
               mc-rtc:
                 cloudsmith: mc-rtc/${{ matrix.mc-rtc-version }}
-            apt: libmc-rtc-dev mc-rtc-utils mc-state-observation doxygen graphviz jvrc-choreonoid choreonoid libcnoid-dev
+            apt: libmc-rtc-dev doxygen graphviz
           ros: |
-            apt: ros-base mc-rtc-plugin eigen-conversions
+            apt: ros-base mc-rtc-plugin mc-state-observation
       - name: colcon build
         if: matrix.colcon-build == 'colcon'
         uses: jrl-umi3218/github-actions/build-colcon-project@master
         with:
           build-type: ${{ matrix.build-type }}
-          cmake-args: -DINSTALL_DOCUMENTATION=${{ env.UPLOAD_DOCUMENTATION }} -DENABLE_QLD=ON
+          cmake-args: -DINSTALL_DOCUMENTATION=${{ env.UPLOAD_DOCUMENTATION }} -DENABLE_QLD=ON -DUSE_ROS2=ON
           colcon-test-args: --no-deps
           build-packages: "baseline_walking_controller ${{ env.BASELINE_FOOTSTEP_PLANNER }}"
           test-packages: baseline_walking_controller
