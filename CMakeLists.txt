@@ -12,7 +12,7 @@ set(CXX_DISABLE_WERROR ON)
 set(CMAKE_COLOR_DIAGNOSTICS ON)
 
 option(INSTALL_DOCUMENTATION "Generate and install the documentation" OFF)
-option(USE_ROS2 "Use ROS2" OFF)
+option(USE_ROS2 "Compile in ROS2 workspace" OFF)
 
 include(cmake/base.cmake)
 project(baseline_walking_controller)
@@ -27,22 +27,31 @@ add_project_dependency(trajectory_collection REQUIRED)
 add_project_dependency(force_control_collection REQUIRED)
 add_project_dependency(centroidal_control_collection REQUIRED)
 
-if(USE_ROS2)
+if(DEFINED ENV{ROS_DISTRO})
   find_package(ament_cmake REQUIRED)
-  configure_file(etc/mc_rtc.in.yaml ${PROJECT_SOURCE_DIR}/etc/mc_rtc.yaml @ONLY)
+  set(MAIN_STATE
+      "BWC::Main_:\n    base: Parallel\n    states: [BWC::GuiWalk_, BWC::Teleop_, BWC::ROSWalk_]"
+  )
 else()
-  set(BUILD_TESTING OFF)
+  set(MAIN_STATE "BWC::Main_:\n    base: Parallel\n    states: [BWC::GuiWalk_]")
 endif()
 
 set(STATES_INSTALL_PREFIX ${MC_CONTROLLER_INSTALL_PREFIX})
 
 set(CONFIG_OUT "${CMAKE_CURRENT_BINARY_DIR}/etc/BaselineWalkingController.yaml")
-configure_file(${PROJECT_SOURCE_DIR}/etc/BaselineWalkingController.in.yaml "${CONFIG_OUT}" @ONLY)
+configure_file(${PROJECT_SOURCE_DIR}/etc/BaselineWalkingController.in.yaml
+               "${CONFIG_OUT}" @ONLY)
 install(FILES ${CONFIG_OUT} DESTINATION ${MC_RTC_LIBDIR}/mc_controller/etc/)
 
 add_subdirectory(src)
 
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/BaselineWalkingController DESTINATION include)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/include/BaselineWalkingController
+        DESTINATION include)
+
+install(
+  FILES "${CMAKE_CURRENT_SOURCE_DIR}/etc/mc_rtc.yaml"
+  DESTINATION
+    "${MC_CONTROLLER_RUNTIME_INSTALL_PREFIX}/etc/BaselineWalkingController")
 
 if(BUILD_TESTING)
   add_subdirectory(tests)
@@ -52,7 +61,8 @@ if(INSTALL_DOCUMENTATION)
   add_subdirectory(doc)
 endif()
 
-set(PACKAGE_EXTRA_MACROS "set(BWC_STATES_LIBRARIES \"${MC_CONTROLLER_INSTALL_PREFIX}/baseline_walking_controller/states\")
+set(PACKAGE_EXTRA_MACROS
+    "set(BWC_STATES_LIBRARIES \"${MC_CONTROLLER_INSTALL_PREFIX}/baseline_walking_controller/states\")
 set(BWC_STATES_FILES \"\${BWC_STATES_LIBRARIES}/data\")")
 
 if(USE_ROS2)

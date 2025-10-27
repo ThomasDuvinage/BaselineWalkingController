@@ -18,6 +18,7 @@ repos:
   - id: check-executables-have-shebangs
   - id: check-merge-conflict
   - id: check-yaml
+    exclude: ^etc/BaselineWalkingController.in.yaml$
   - id: debug-statements
   - id: destroyed-symlinks
   - id: detect-private-key

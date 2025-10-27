@@ -47,15 +47,14 @@ states:
     configs:
       poseTopicName: /goal_pose
 
-  BWC::Main_:
-    base: Parallel
-    states: [BWC::GuiWalk_, BWC::Teleop_, BWC::ROSWalk_]
+  @MAIN_STATE@
 
 # Transitions map
 transitions:
   - [BWC::Initial_, OK, BWC::Main_, Auto]
 # Initial state
 init: BWC::Initial_
+
 
 ObserverPipelines:
   name: MainObserverPipeline
